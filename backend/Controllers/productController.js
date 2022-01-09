@@ -11,7 +11,7 @@ exports.getAllProducts = async (req, res) => {
 }
 
 exports.createProduct = async (req, res) => {
-    
+
     var product = await Product.create(req.body)
 
     res.status(200).json({
@@ -20,25 +20,67 @@ exports.createProduct = async (req, res) => {
     })
 }
 
-exports.updateProduct = async (req,res) => {
+exports.getProductDetails = async (req, res) => {
 
     var product = await Product(req.params.id)
 
-    if (!product){
+    if (!product) {
         return res.status(500).json({
-            success:false,
-            message:"Product not found"
+            success: false,
+            message: "Product not found"
         })
     }
 
-    product = await Product.findByIdAndUpdate(req.params.id,req.body,{
-        new:true,
-        runValidator:true,
-        useFindAndModify:false
+
+    res.status(200).json({
+        sucesss: true,
+        product
+    })
+}
+
+
+
+// Admin
+exports.updateProduct = async (req, res) => {
+
+    var product = await Product(req.params.id)
+
+    if (!product) {
+        return res.status(500).json({
+            success: false,
+            message: "Product not found"
+        })
+    }
+
+    product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidator: true,
+        useFindAndModify: false
     })
 
     res.status(200).json({
-        sucesss:true,
+        sucesss: true,
         product
+    })
+}
+
+
+// Admin
+exports.deleteProduct = async (req, res) => {
+
+    var product = await Product(req.params.id)
+
+    if (!product) {
+        return res.status(500).json({
+            success: false,
+            message: "Product not found"
+        })
+    }
+
+    await product.ramove()
+
+    res.status(200).json({
+        sucesss: true,
+        message: "Product Deleted Sucessfully"
     })
 }
