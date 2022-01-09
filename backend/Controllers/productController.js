@@ -1,6 +1,8 @@
 var Product = require("../models/productModel")
+var ErrorHandler = require("../utils/errorHandling")
+var catchAsyncError = require("../middleware/catchAsyncError")
 
-exports.getAllProducts = async (req, res) => {
+exports.getAllProducts = catchAsyncError(async (req, res, next) => {
 
     var products = await Product.find()
 
@@ -8,9 +10,9 @@ exports.getAllProducts = async (req, res) => {
         success: true,
         products
     })
-}
+})
 
-exports.createProduct = async (req, res) => {
+exports.createProduct = catchAsyncError(async (req, res, next) => {
 
     var product = await Product.create(req.body)
 
@@ -18,17 +20,14 @@ exports.createProduct = async (req, res) => {
         success: true,
         product
     })
-}
+})
 
-exports.getProductDetails = async (req, res) => {
+exports.getProductDetails = catchAsyncError(async (req, res, next) => {
 
     var product = await Product(req.params.id)
 
     if (!product) {
-        return res.status(500).json({
-            success: false,
-            message: "Product not found"
-        })
+        return next(new ErrorHandler("product not found", 404))
     }
 
 
@@ -37,19 +36,16 @@ exports.getProductDetails = async (req, res) => {
         product
     })
 }
-
+)
 
 
 // Admin
-exports.updateProduct = async (req, res) => {
+exports.updateProduct = catchAsyncError(async (req, res, next) => {
 
     var product = await Product(req.params.id)
 
     if (!product) {
-        return res.status(500).json({
-            success: false,
-            message: "Product not found"
-        })
+        return next(new ErrorHandler("product not found", 404))
     }
 
     product = await Product.findByIdAndUpdate(req.params.id, req.body, {
@@ -62,19 +58,16 @@ exports.updateProduct = async (req, res) => {
         sucesss: true,
         product
     })
-}
+})
 
 
 // Admin
-exports.deleteProduct = async (req, res) => {
+exports.deleteProduct = catchAsyncError(async (req, res, next) => {
 
     var product = await Product(req.params.id)
 
     if (!product) {
-        return res.status(500).json({
-            success: false,
-            message: "Product not found"
-        })
+        return next(new ErrorHandler("product not found", 404))
     }
 
     await product.ramove()
@@ -83,4 +76,4 @@ exports.deleteProduct = async (req, res) => {
         sucesss: true,
         message: "Product Deleted Sucessfully"
     })
-}
+})
