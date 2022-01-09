@@ -1,7 +1,7 @@
 var mongoose = require("mongoose")
 const { required } = require("nodemon/lib/config")
 
-var productSchema = mongoose.Schema({
+var productSchema = new mongoose.Schema({
     name:{
         type:String,
         required:[true,"product name required"]
