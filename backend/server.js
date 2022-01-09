@@ -2,6 +2,11 @@ var app = require('./App')
 var dotenv = require("dotenv")
 var connectDatabase = require("./db/database.js")
 
+process.on("uncaughtException",(err)=>{
+    console.log(`Error : ${err.message}`);
+    console.log(`uncaughtException`)
+})
+
 
 dotenv.config({ path: "backend/config/config.env" })
 connectDatabase()
